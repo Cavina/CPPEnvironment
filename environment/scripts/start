@@ -1,0 +1,60 @@
+#!/bin/bash
+
+function print_usage_message()
+{
+	echo "Usage:"
+	echo
+	echo " Starts a new project from the template. The new"
+	echo " project will appear in the ~/projects directory. Alternatively,"
+	echo " the path to the environment directory can also be specified."
+	echo
+}
+
+
+if [ $# -ne 2 ] && [ $# -ne 3 ]; then 
+	print_usage_message
+	exit 1
+fi
+
+PROJECT_NAME=$1
+
+TEMPLATES_DIR=~/Templates
+PROJECTS_DIR=$(readlink -m ~/projects)
+
+TEMP_DIR=$(mktemp -d)
+
+function cleanup()
+{
+	rm -rf $TEMP_DIR
+}
+
+set -e
+trap cleanup exit
+
+if [ -e $PROJECTS_DIR/$PROJECT_NAME ]; then
+	echo "The project $PROJECT_NAME already exists in your ~/projects directory."
+	echo 
+  	exit 1
+fi
+
+TEMPLATE_NAME=$2
+
+if [ ! -e $TEMPLATES_DIR/$TEMPLATE_NAME ]; then
+	echo "The template $TEMPLATE_NAME does not exist."
+	echo
+	echo "These are the available templates:"
+	ls -1 $TEMPLATES_DIR
+	echo
+	echo "If it is expected to exist, perhapts you haven't added it yet."
+	echo
+	exit 1
+fi
+
+mkdir -p $PROJECTS_DIR/$PROJECT_NAME
+cp -r $TEMPLATES_DIR/$TEMPLATE_NAME/* $PROJECTS_DIR/$PROJECT_NAME
+cp -r $TEMP_DIR/src/* $PROJECTS_DIR/$PROJECT_NAME/src
+echo -n $TEMPLATE_NAME >$PROJECTS_DIR/$PROJECT_NAME/.template
+
+echo "The project $PROJECT_NAME has been created from the template $TEMPLATE_NAME."
+echo "It is ready to be used in this directory: ~/projects/$PROJECT_NAME"
+
