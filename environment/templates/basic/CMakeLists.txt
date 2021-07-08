@@ -10,9 +10,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(COMPILE_FLAGS "-stdlib=libc++ -Wall -pedantic-errors -Werror -g -fstandalone-debug")
+set(COMPILE_FLAGS "-std=c++17 -stdlib=libc++ -Wall -pedantic-errors -Werror -g -fstandalone-debug")
 
-project(linkedlistproject)
+project(basicproject)
 
 file(GLOB CORE_SRC_FILES ${CMAKE_SOURCE_DIR}/core/*.cpp)
 file(GLOB CORE_INCLUDE_FILES ${CMAKE_SOURCE_DIR}/core/*.hpp)
@@ -49,6 +49,7 @@ project(a.out.gtest)
 
 file(GLOB GTEST_SRC_FILES ${CMAKE_SOURCE_DIR}/gtest/*.cpp)
 file(GLOB GTEST_INCLUDE_FILES ${CMAKE_SOURCE_DIR}/gtest/*.hpp)
+add_definitions("-std=c++17 -Wall -Wno-c++17-exte    nsions -pedantic-errors -Werror -g -fstandalone-debug")
 
 add_executable(${PROJECT_NAME} ${GTEST_SRC_FILES} ${APP_SRC_FILES_EXCEPT_MAIN})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/core)
